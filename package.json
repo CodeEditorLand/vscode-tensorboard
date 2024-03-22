@@ -1,7 +1,39 @@
 {
-	"activationEvents": [
-		"onLanguage:python"
-	],
+	"name": "tensorboard",
+	"displayName": "Tensorboard",
+	"version": "0.0.1",
+	"private": false,
+	"description": "Launch and view Tensorboards within VS Code",
+	"homepage": "https://github.com/CodeEditorLand/Foundation#readme",
+	"bugs": {
+		"url": "https://github.com/CodeEditorLand/Foundation/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/CodeEditorLand/Foundation.git"
+	},
+	"license": "SEE LICENSE IN LICENSE",
+	"qna": "https://github.com/microsoft/vscode-jupyter/discussions",
+	"author": {
+		"name": "Playform",
+		"email": "Hello@Playform.Cloud",
+		"url": "https://playform.cloud"
+	},
+	"type": "module",
+	"main": "./dist/extension.js",
+	"scripts": {
+		"analyze": "webpack --profile --json > 'tmp/stats.json' && npx webpack-bundle-analyzer tmp/stats.json",
+		"compile": "webpack",
+		"compile-release": "webpack --mode production --devtool hidden-source-map",
+		"compile-tests": "tsc -p . --outDir out",
+		"format-fix": "prettier 'src/**/*.ts*' --write && prettier 'build/**/*.js' --write && prettier '.github/**/*.yml' --write",
+		"postinstall": "npx vscode-dts dev && npx vscode-dts 1.85.0",
+		"package": "npm run compile-release && vsce package -o ms-toolsai-tensorboard-insiders.vsix",
+		"prepublishOnly": "TypeScriptESBuild 'Source/**/*.ts'",
+		"updateBuildNumber": "node ./build/updateBuildNumber.js",
+		"watch": "webpack --watch",
+		"watch-tests": "tsc -p . -w --outDir out"
+	},
 	"contributes": {
 		"commands": [
 			{
@@ -58,11 +90,13 @@
 			]
 		}
 	},
+	"activationEvents": [
+		"onLanguage:python"
+	],
 	"dependencies": {
 		"@vscode/extension-telemetry": "^0.7.7",
 		"@vscode/python-extension": "^1.0.5"
 	},
-	"description": "Launch and view Tensorboards within VS Code",
 	"devDependencies": {
 		"@types/chai": "^4.3.6",
 		"@types/mocha": "^9.1.1",
@@ -78,35 +112,20 @@
 		"webpack": "^5.88.2",
 		"webpack-cli": "^5.1.4"
 	},
-	"displayName": "Tensorboard",
-	"enabledApiProposals": [
-		"portsAttributes"
-	],
 	"extensionDependencies": [
 		"ms-python.python"
 	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"icon": "icon.png",
 	"galleryBanner": {
 		"color": "#ffffff",
 		"theme": "light"
 	},
-	"icon": "icon.png",
-	"l10n": "./l10n",
-	"main": "./dist/extension.js",
-	"name": "tensorboard",
 	"preview": true,
-	"qna": "https://github.com/microsoft/vscode-jupyter/discussions",
-	"scripts": {
-		"analyze": "webpack --profile --json > 'tmp/stats.json' && npx webpack-bundle-analyzer tmp/stats.json",
-		"compile": "webpack",
-		"compile-release": "webpack --mode production --devtool hidden-source-map",
-		"compile-tests": "tsc -p . --outDir out",
-		"format-fix": "prettier 'src/**/*.ts*' --write && prettier 'build/**/*.js' --write && prettier '.github/**/*.yml' --write",
-		"package": "npm run compile-release && vsce package -o ms-toolsai-tensorboard-insiders.vsix",
-		"postinstall": "npx vscode-dts dev && npx vscode-dts 1.85.0",
-		"prepublishOnly": "TypeScriptESBuild 'Source/**/*.ts'",
-		"updateBuildNumber": "node ./build/updateBuildNumber.js",
-		"watch": "webpack --watch",
-		"watch-tests": "tsc -p . -w --outDir out"
-	},
-	"type": "module"
+	"enabledApiProposals": [
+		"portsAttributes"
+	],
+	"l10n": "./l10n"
 }
