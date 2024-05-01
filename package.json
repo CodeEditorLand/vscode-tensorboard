@@ -1,14 +1,39 @@
 {
-	"activationEvents": [
-		"onLanguage:python"
+	"name": "tensorboard",
+	"displayName": "Tensorboard",
+	"version": "0.0.1",
+	"private": false,
+	"description": "Launch and view Tensorboards within VS Code",
+	"keywords": [
+		"land"
 	],
-	"author": {
-		"email": "Land@PlayForm.Cloud",
-		"name": "🌆 — Land —",
-		"url": "HTTPS://Land.PlayForm.Cloud"
-	},
+	"homepage": "HTTPS://GitHub.Com/CodeEditorLand/LandTensorboard#readme",
 	"bugs": {
 		"url": "HTTPS://GitHub.Com/CodeEditorLand/LandTensorboard/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+HTTPS://github.com/CodeEditorLand/LandTensorboard.git"
+	},
+	"license": "SEE LICENSE IN LICENSE",
+	"qna": "https://github.com/microsoft/vscode-jupyter/discussions",
+	"author": {
+		"name": "🌆 — Land —",
+		"email": "Land@PlayForm.Cloud",
+		"url": "HTTPS://Land.PlayForm.Cloud"
+	},
+	"type": "module",
+	"main": "./dist/extension.js",
+	"scripts": {
+		"Document": "Document 'Source/**/*.ts'",
+		"analyze": "webpack --profile --json > 'tmp/stats.json' && npx webpack-bundle-analyzer tmp/stats.json",
+		"compile": "webpack",
+		"compile-release": "webpack --mode production --devtool hidden-source-map",
+		"compile-tests": "tsc -p . --outDir out",
+		"format-fix": "prettier 'src/**/*.ts*' --write && prettier 'build/**/*.js' --write && prettier '.github/**/*.yml' --write",
+		"prepublishOnly": "Build 'Source/**/*.ts'",
+		"updateBuildNumber": "node ./build/updateBuildNumber.js",
+		"watch-tests": "tsc -p . -w --outDir out"
 	},
 	"contributes": {
 		"commands": [
@@ -66,8 +91,10 @@
 			]
 		}
 	},
+	"activationEvents": [
+		"onLanguage:python"
+	],
 	"dependencies": {},
-	"description": "Launch and view Tensorboards within VS Code",
 	"devDependencies": {
 		"@playform/build": "0.0.7",
 		"@playform/document": "0.0.6",
@@ -77,47 +104,20 @@
 		"glob": "10.3.12",
 		"ts-loader": "9.5.1"
 	},
-	"displayName": "Tensorboard",
-	"enabledApiProposals": [
-		"portsAttributes"
-	],
 	"extensionDependencies": [
 		"ms-python.python"
 	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"icon": "icon.png",
 	"galleryBanner": {
 		"color": "#ffffff",
 		"theme": "light"
 	},
-	"homepage": "HTTPS://GitHub.Com/CodeEditorLand/LandTensorboard#readme",
-	"icon": "icon.png",
-	"keywords": [
-		"land"
-	],
-	"l10n": "./l10n",
-	"license": "SEE LICENSE IN LICENSE",
-	"main": "./dist/extension.js",
-	"name": "tensorboard",
 	"preview": true,
-	"private": false,
-	"publishConfig": {
-		"access": "public"
-	},
-	"qna": "https://github.com/microsoft/vscode-jupyter/discussions",
-	"repository": {
-		"type": "git",
-		"url": "git+HTTPS://github.com/CodeEditorLand/LandTensorboard.git"
-	},
-	"scripts": {
-		"Document": "Document 'Source/**/*.ts'",
-		"analyze": "webpack --profile --json > 'tmp/stats.json' && npx webpack-bundle-analyzer tmp/stats.json",
-		"compile": "webpack",
-		"compile-release": "webpack --mode production --devtool hidden-source-map",
-		"compile-tests": "tsc -p . --outDir out",
-		"format-fix": "prettier 'src/**/*.ts*' --write && prettier 'build/**/*.js' --write && prettier '.github/**/*.yml' --write",
-		"prepublishOnly": "Build 'Source/**/*.ts'",
-		"updateBuildNumber": "node ./build/updateBuildNumber.js",
-		"watch-tests": "tsc -p . -w --outDir out"
-	},
-	"type": "module",
-	"version": "0.0.1"
+	"enabledApiProposals": [
+		"portsAttributes"
+	],
+	"l10n": "./l10n"
 }
