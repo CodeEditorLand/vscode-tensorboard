@@ -1,0 +1,123 @@
+{
+	"name": "tensorboard",
+	"displayName": "Tensorboard",
+	"version": "0.0.1",
+	"private": false,
+	"description": "Launch and view Tensorboards within VS Code",
+	"keywords": [
+		"land"
+	],
+	"homepage": "HTTPS://GitHub.Com/CodeEditorLand/LandTensorboard#readme",
+	"bugs": {
+		"url": "HTTPS://GitHub.Com/CodeEditorLand/LandTensorboard/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+HTTPS://github.com/CodeEditorLand/LandTensorboard.git"
+	},
+	"license": "SEE LICENSE IN LICENSE",
+	"qna": "https://github.com/microsoft/vscode-jupyter/discussions",
+	"author": {
+		"name": "🌆 — Land —",
+		"email": "Land@PlayForm.Cloud",
+		"url": "HTTPS://Land.PlayForm.Cloud"
+	},
+	"type": "module",
+	"main": "./dist/extension.js",
+	"scripts": {
+		"Document": "Document 'Source/**/*.ts'",
+		"analyze": "webpack --profile --json > 'tmp/stats.json' && npx webpack-bundle-analyzer tmp/stats.json",
+		"compile": "webpack",
+		"compile-release": "webpack --mode production --devtool hidden-source-map",
+		"compile-tests": "tsc -p . --outDir out",
+		"format-fix": "prettier 'src/**/*.ts*' --write && prettier 'build/**/*.js' --write && prettier '.github/**/*.yml' --write",
+		"prepublishOnly": "Build 'Source/**/*.ts'",
+		"updateBuildNumber": "node ./build/updateBuildNumber.js",
+		"watch-tests": "tsc -p . -w --outDir out"
+	},
+	"contributes": {
+		"commands": [
+			{
+				"category": "Python",
+				"command": "tensorboard.launch",
+				"title": "%launchTensorBoard.title%"
+			},
+			{
+				"category": "Python",
+				"command": "tensorboard.refresh",
+				"enablement": "tensorboard.hasActiveTensorBoardSession",
+				"icon": "$(refresh)",
+				"title": "%refreshTensorBoard.title%"
+			}
+		],
+		"configuration": {
+			"properties": {
+				"tensorBoard.log": {
+					"default": "error",
+					"description": "%tensorBoard.log.description%",
+					"enum": [
+						"off",
+						"error",
+						"debug"
+					],
+					"type": "string"
+				},
+				"tensorBoard.logDirectory": {
+					"default": "",
+					"description": "%tensorBoard.logDirectory.description%",
+					"scope": "resource",
+					"type": "string"
+				}
+			},
+			"title": "Tensorboard",
+			"type": "object"
+		},
+		"menus": {
+			"commandPalette": [
+				{
+					"category": "Python",
+					"command": "tensorboard.launch",
+					"title": "%launchTensorBoard.title%",
+					"when": "!virtualWorkspace && isWorkspaceTrusted"
+				},
+				{
+					"category": "Python",
+					"command": "tensorboard.refresh",
+					"enablement": "tensorboard.hasActiveTensorBoardSession",
+					"icon": "$(refresh)",
+					"title": "%refreshTensorBoard.title%",
+					"when": "!virtualWorkspace && isWorkspaceTrusted"
+				}
+			]
+		}
+	},
+	"activationEvents": [
+		"onLanguage:python"
+	],
+	"dependencies": {},
+	"devDependencies": {
+		"@playform/build": "0.0.7",
+		"@playform/document": "0.0.6",
+		"@types/chai": "4.3.14",
+		"@types/node": "20.12.7",
+		"chai": "5.1.0",
+		"glob": "10.3.12",
+		"ts-loader": "9.5.1"
+	},
+	"extensionDependencies": [
+		"ms-python.python"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"icon": "icon.png",
+	"galleryBanner": {
+		"color": "#ffffff",
+		"theme": "light"
+	},
+	"preview": true,
+	"enabledApiProposals": [
+		"portsAttributes"
+	],
+	"l10n": "./l10n"
+}
