@@ -32,17 +32,15 @@ npm ci
 
 ### Incremental Builds
 
--   `npm run watch`
+* `npm run watch`
 
 ### Errors and Warnings
 
-TypeScript errors and warnings will be displayed in the `Problems` window of
-Visual Studio Code.
+TypeScript errors and warnings will be displayed in the `Problems` window of Visual Studio Code.
 
 ### Run dev build and validate your changes
 
-Use the `Build and launch` debug configuration to run the extension in a new VS
-Code window.
+Use the `Build and launch` debug configuration to run the extension in a new VS Code window.
 
 ### Running Desktop Tests
 
