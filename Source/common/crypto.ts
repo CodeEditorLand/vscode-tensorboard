@@ -5,7 +5,7 @@ const computedHashes: Record<string, string> = {};
 let stopStoringHashes = false;
 
 // Node
-const cryptoProvider = require('node:crypto').webcrypto;
+const cryptoProvider = require('crypto').webcrypto;
 
 /**
  * Computes a hash for a give string and returns hash as a hex value.
