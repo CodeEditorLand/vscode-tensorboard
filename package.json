@@ -75,7 +75,7 @@
 	"dependencies": {},
 	"devDependencies": {
 		"@types/chai": "5.0.0",
-		"@types/node": "22.7.2",
+		"@types/node": "22.7.3",
 		"chai": "5.1.1",
 		"glob": "11.0.0",
 		"ts-loader": "9.5.1"
