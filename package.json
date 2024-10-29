@@ -61,8 +61,8 @@
 	"dependencies": {},
 	"description": "Launch and view Tensorboards within VS Code",
 	"devDependencies": {
-		"@types/chai": "5.0.0",
-		"@types/node": "22.8.1",
+		"@types/chai": "5.0.1",
+		"@types/node": "22.8.2",
 		"chai": "5.1.2",
 		"glob": "11.0.0",
 		"ts-loader": "9.5.1"
