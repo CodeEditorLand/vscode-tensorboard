@@ -47,6 +47,7 @@ export class TensorBoardSessionProvider extends BaseDisposable {
 					trigger: TensorBoardEntrypointTrigger = TensorBoardEntrypointTrigger.palette,
 				) => {
 					sendTensorboardLaunch(entrypoint, trigger);
+
 					return this.createNewSession();
 				},
 			),
@@ -78,6 +79,7 @@ export class TensorBoardSessionProvider extends BaseDisposable {
 
 	private async createNewSession(): Promise<TensorBoardSession | undefined> {
 		traceDebug("Starting new TensorBoard session...");
+
 		try {
 			const newSession = new TensorBoardSession();
 			this._register(
@@ -92,6 +94,7 @@ export class TensorBoardSessionProvider extends BaseDisposable {
 			this._register(newSession);
 			this.knownSessions.push(newSession);
 			await newSession.start();
+
 			return newSession;
 		} catch (e) {
 			traceError(

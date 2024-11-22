@@ -28,6 +28,7 @@ export class PythonExtensionChecker extends BaseDisposable {
 		PythonExtensionChecker.promptDisplayed = true;
 		// Ask user if they want to install and then wait for them to actually install it.
 		const yes = Common.Yes;
+
 		const answer = await window.showInformationMessage(
 			l10n.t(
 				"The Python Extension is required to perform that task. Click Yes to open Python Extension installation page.",
@@ -35,6 +36,7 @@ export class PythonExtensionChecker extends BaseDisposable {
 			{ modal: true },
 			yes,
 		);
+
 		if (answer === yes) {
 			await this.installPythonExtension();
 		}

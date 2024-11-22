@@ -17,18 +17,23 @@ export async function launchTensorboard(
 	logDir: string,
 ): Promise<ChildProcess> {
 	traceDebug(`Launching Tensorboard in ${logDir} for ${pythonEnv.path}`);
+
 	const api = await PrivatePythonApiProvider.instance.getApi();
+
 	const env = await api.getActivatedEnvironmentVariables(resource);
+
 	const script = Uri.joinPath(
 		ExtensionInfo.context.extensionUri,
 		"pythonFiles",
 		"tensorboard_launcher.py",
 	);
+
 	const args = [
 		fileToCommandArgument(script.fsPath),
 		fileToCommandArgument("./"),
 	];
 	logProcessSpawn(pythonEnv.path, args, "./");
+
 	return spawn(pythonEnv.path, args, { cwd: logDir, env });
 }
 
@@ -38,11 +43,15 @@ export async function waitForTensorboardToStart(
 ): Promise<string> {
 	return new Promise<string>((resolve) => {
 		const disposable = new DisposableStore();
+
 		const stdOutHandler = (data: Buffer | string) => {
 			const output = data.toString("utf8");
+
 			const match = output.match(/TensorBoard started at (.*)/);
+
 			if (match && match[1]) {
 				disposable.dispose();
+
 				return resolve(match[1]);
 			}
 			traceDebug(output);

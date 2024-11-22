@@ -90,6 +90,7 @@ export class TensorBoardSession
 		new EventEmitter<TensorBoardSession>(),
 	);
 	private readonly globalMemento: Memento;
+
 	constructor() {
 		super();
 		this.globalMemento = ExtensionInfo.context.globalState;
@@ -136,16 +137,20 @@ export class TensorBoardSession
 
 	public async start(): Promise<void> {
 		const api = await PrivatePythonApiProvider.instance.getApi();
+
 		const tensorBoardWasInstalled =
 			await api.ensureDependenciesAreInstalled();
+
 		if (!tensorBoardWasInstalled) {
 			return;
 		}
 		const logDir = await getLogDirectory();
+
 		if (!logDir) {
 			return;
 		}
 		const url = await this.startTensorboardSession(logDir);
+
 		if (url) {
 			this.url = url;
 			await this.showPanel(url);
@@ -159,7 +164,9 @@ export class TensorBoardSession
 		logDir: string,
 	): Promise<string | undefined> {
 		const pythonApi = await PythonExtension.api();
+
 		const interpreter = pythonApi.environments.getActiveEnvironmentPath();
+
 		if (!interpreter) {
 			return;
 		}
@@ -177,10 +184,13 @@ export class TensorBoardSession
 		};
 
 		const sessionStartStopwatch = new StopWatch();
+
 		const proc = await launchTensorboard(undefined, interpreter, logDir);
+
 		let disposed = false;
 		this._register({ dispose: () => (disposed = true) });
 		this._register(new Disposable(() => proc.kill()));
+
 		const result = await window.withProgress(
 			progressOptions,
 			(_progress: Progress<unknown>, token: CancellationToken) => {
@@ -194,10 +204,12 @@ export class TensorBoardSession
 						return;
 					}
 					const port = parseInt(new URL(url).port, 10);
+
 					if (port) {
 						this.usedPorts.add(port);
 					}
 				});
+
 				return Promise.race([
 					sleep(timeout).then(() => timeout),
 					raceCancellation(token, "canceled", spawnTensorBoard),
@@ -212,6 +224,7 @@ export class TensorBoardSession
 				TensorBoardSessionStartResult.cancel,
 			);
 			proc.kill();
+
 			return;
 		}
 		if (result === "success") {
@@ -220,6 +233,7 @@ export class TensorBoardSession
 				sessionStartStopwatch.elapsed,
 				TensorBoardSessionStartResult.success,
 			);
+
 			return;
 		}
 		if (typeof result === "number") {
@@ -228,16 +242,19 @@ export class TensorBoardSession
 				sessionStartStopwatch.elapsed,
 				TensorBoardSessionStartResult.error,
 			);
+
 			throw new Error(
 				`Timed out after ${timeout / 1000} seconds waiting for TensorBoard to launch.`,
 			);
 		}
 		traceDebug(`Started TensorBoard session with result ${result}`);
+
 		return result;
 	}
 
 	private async showPanel(url: string) {
 		traceDebug("Showing TensorBoard panel");
+
 		const panel = this.webviewPanel || (await this.createPanel(url));
 		panel.reveal();
 		this._active = true;
@@ -291,18 +308,23 @@ export class TensorBoardSession
 							message.args.filename,
 							message.args.line,
 						);
+
 						break;
+
 					default:
 						break;
 				}
 			}),
 		);
+
 		return webviewPanel;
 	}
 
 	private async jumpToSource(fsPath: string, line: number) {
 		sendJumptToSource();
+
 		let uri: Uri | undefined;
+
 		if (fs.existsSync(fsPath)) {
 			uri = Uri.file(fsPath);
 		} else {
@@ -317,10 +339,12 @@ export class TensorBoardSession
 					description: TensorBoard.selectMissingSourceFileDescription,
 				},
 			];
+
 			const selection = await window.showQuickPick(items, {
 				title: TensorBoard.missingSourceFile,
 				placeHolder: fsPath,
 			});
+
 			switch (selection?.label) {
 				case TensorBoard.selectMissingSourceFile: {
 					const filePickerSelection = await window.showOpenDialog({
@@ -328,6 +352,7 @@ export class TensorBoardSession
 						canSelectFolders: false,
 						canSelectMany: false,
 					});
+
 					if (filePickerSelection !== undefined) {
 						[uri] = filePickerSelection;
 					}
@@ -341,6 +366,7 @@ export class TensorBoardSession
 			return;
 		}
 		const document = await workspace.openTextDocument(uri);
+
 		const editor = await window.showTextDocument(
 			document,
 			ViewColumn.Beside,
@@ -348,6 +374,7 @@ export class TensorBoardSession
 		// Select the line if it exists in the document
 		if (line < editor.document.lineCount) {
 			const position = new Position(line, 0);
+
 			const selection = new Selection(
 				position,
 				editor.document.lineAt(line).range.end,
@@ -367,6 +394,7 @@ export class TensorBoardSession
 		// to a system or user action — for example, in remote cases, a user may
 		// close a port forwarding tunnel that was opened by asExternalUri."
 		const fullWebServerUri = await env.asExternalUri(Uri.parse(url));
+
 		return `<!DOCTYPE html>
         <html lang="en">
             <head>
@@ -379,8 +407,10 @@ export class TensorBoardSession
                 <script type="text/javascript">
                     (function() {
                         const vscode = acquireVsCodeApi();
+
                         function resizeFrame() {
                             var f = window.document.getElementById('vscode-tensorboard-iframe');
+
                             if (f) {
                                 f.style.height = window.innerHeight / 0.8 + "px";
                                 f.style.width = window.innerWidth / 0.8 + "px";

@@ -57,8 +57,10 @@ export class PrivatePythonApiProvider extends BaseDisposable {
 	}
 	private constructor() {
 		super();
+
 		const previouslyInstalled =
 			this.extensionChecker.isPythonExtensionInstalled;
+
 		if (!previouslyInstalled) {
 			this._register(
 				extensions.onDidChange(async () => {
@@ -72,6 +74,7 @@ export class PrivatePythonApiProvider extends BaseDisposable {
 
 	public getApi(): Promise<PrivatePythonApi> {
 		this.init().catch(noop);
+
 		return this.api.promise;
 	}
 
@@ -91,6 +94,7 @@ export class PrivatePythonApiProvider extends BaseDisposable {
 		const pythonExtension = extensions.getExtension<{
 			tensorboard: { registerHooks(): void };
 		}>(PythonExtensionId);
+
 		if (!pythonExtension) {
 			await this.extensionChecker.showPythonExtensionInstallRequiredPrompt();
 		} else {
@@ -105,10 +109,12 @@ export class PrivatePythonApiProvider extends BaseDisposable {
 		const pythonExtension = extensions.getExtension<{
 			tensorboard: { registerHooks(): void };
 		}>(PythonExtensionId);
+
 		if (!pythonExtension) {
 			return;
 		}
 		let activated = false;
+
 		if (!pythonExtension.isActive) {
 			try {
 				await pythonExtension.activate();
@@ -118,6 +124,7 @@ export class PrivatePythonApiProvider extends BaseDisposable {
 				this.api.reject(
 					new Error("Python Extnsion failed to actiavte"),
 				);
+
 				return;
 			}
 		}
@@ -125,6 +132,7 @@ export class PrivatePythonApiProvider extends BaseDisposable {
 			return;
 		}
 		this.hooksRegistered = true;
+
 		if (activated) {
 			this.didActivatePython.fire();
 		}

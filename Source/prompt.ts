@@ -25,8 +25,11 @@ enum TensorBoardPromptStateKeys {
 
 export namespace TensorBoardPrompt {
 	let enabledInCurrentSession = true;
+
 	let waitingForUserSelection = false;
+
 	const telementrSentForTrigger: TensorBoardEntrypointTrigger[] = [];
+
 	function sendTelemetryOnce(trigger: TensorBoardEntrypointTrigger) {
 		if (telementrSentForTrigger.includes(trigger)) {
 			return;
@@ -48,18 +51,24 @@ export namespace TensorBoardPrompt {
 			return;
 		}
 		const yes = Common.Yes;
+
 		const no = Common.bannerLabelNo;
+
 		const doNotAskAgain = Common.doNotShowAgain;
+
 		const options = [yes, no, doNotAskAgain];
 		waitingForUserSelection = true;
 		enabledInCurrentSession = false;
 		sendTelemetryOnce(trigger);
+
 		const selection = await window.showInformationMessage(
 			TensorBoard.nativeTensorBoardPrompt,
 			...options,
 		);
 		waitingForUserSelection = false;
+
 		let telemetrySelection = TensorBoardPromptSelection.None;
+
 		switch (selection) {
 			case yes:
 				telemetrySelection = TensorBoardPromptSelection.Yes;
@@ -68,14 +77,20 @@ export namespace TensorBoardPrompt {
 					TensorBoardEntrypoint.prompt,
 					trigger,
 				);
+
 				break;
+
 			case doNotAskAgain:
 				telemetrySelection = TensorBoardPromptSelection.DoNotAskAgain;
 				await disablePrompt();
+
 				break;
+
 			case no:
 				telemetrySelection = TensorBoardPromptSelection.No;
+
 				break;
+
 			default:
 				break;
 		}
@@ -89,9 +104,11 @@ export namespace TensorBoardPrompt {
 			traceDebug(
 				"TensorBoard prompt is disabled as there are no workspace folders that are file system based",
 			);
+
 			return false;
 		}
 		const pythonApi = await PrivatePythonApiProvider.instance.getApi();
+
 		return (
 			pythonApi.isPromptEnabled() &&
 			ExtensionInfo.context.globalState.get<boolean>(

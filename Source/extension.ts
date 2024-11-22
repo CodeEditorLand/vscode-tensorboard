@@ -24,8 +24,10 @@ export async function activate(context: ExtensionContext) {
 	context.subscriptions.push(watchEditorsForTensorboardUsage());
 	context.subscriptions.push(watchTerminalForTensorboardUsage());
 	context.subscriptions.push(watchFileSystemForTensorboardUsage());
+
 	const apiProvider = PrivatePythonApiProvider.instance;
 	void apiProvider.getApi();
+
 	return {
 		registerPythonApi: (api: PrivatePythonApi) =>
 			apiProvider.registerPythonApi(api),

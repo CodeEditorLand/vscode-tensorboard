@@ -24,8 +24,11 @@ const globPatterns = ["*tfevents*", "*/*tfevents*", "*/*/*tfevents*"];
 
 export function watchFileSystemForTensorboardUsage() {
 	const dispsoableStore = new DisposableStore();
+
 	const fileSystemWatchers = new Map<WorkspaceFolder, FileSystemWatcher[]>();
+
 	const folders = workspace.workspaceFolders;
+
 	if (!folders) {
 		return new Disposable(noop);
 	}
@@ -41,6 +44,7 @@ export function watchFileSystemForTensorboardUsage() {
 			updateFileSystemWatchers(e, fileSystemWatchers, dispsoableStore),
 		),
 	);
+
 	return dispsoableStore;
 }
 
@@ -54,6 +58,7 @@ function updateFileSystemWatchers(
 	}
 	for (const removed of event.removed) {
 		const watchers = fileSystemWatchers.get(removed);
+
 		if (watchers) {
 			Disposable.from(...watchers).dispose();
 			fileSystemWatchers.delete(removed);
@@ -67,8 +72,10 @@ function createFileSystemWatcher(
 	dispsoableStore: DisposableStore,
 ) {
 	const fileWatchers = [];
+
 	for (const pattern of globPatterns) {
 		const relativePattern = new RelativePattern(folder, pattern);
+
 		const fileSystemWatcher =
 			workspace.createFileSystemWatcher(relativePattern);
 
@@ -107,7 +114,9 @@ function onChangedActiveTextEditor(editor: TextEditor | undefined): void {
 		return;
 	}
 	const { document } = editor;
+
 	const extName = path.extname(document.fileName).toLowerCase();
+
 	if (
 		extName === ".py" ||
 		(extName === ".ipynb" && document.languageId === "python")
@@ -118,6 +127,7 @@ function onChangedActiveTextEditor(editor: TextEditor | undefined): void {
 			lineNumber += 1
 		) {
 			const line = document.lineAt(lineNumber);
+
 			if (containsTensorBoardImport([line.text])) {
 				void TensorBoardPrompt.show(
 					TensorBoardEntrypointTrigger.fileimport,
@@ -139,10 +149,12 @@ export function watchTerminalForTensorboardUsage(): Disposable {
 		const matches = window.terminals.filter(
 			(terminal) => terminal.name === "tensorboard",
 		);
+
 		if (matches.length > 0) {
 			sendTensorboardDetectedInTerminal();
 			clearInterval(handle); // Only need telemetry sent once per VS Code session
 		}
 	}, 300_000);
+
 	return new Disposable(() => clearInterval(handle));
 }

@@ -23,6 +23,7 @@ const sendNotebookTelemetry = once(() =>
 		TensorBoardEntrypoint.codelens,
 	),
 );
+
 const sendPythonTelemetry = once(() =>
 	sendTensorboardEntrypointTriggered(
 		TensorBoardEntrypointTrigger.fileimport,
@@ -34,16 +35,19 @@ export function registerCodeLensProvider() {
 	return languages.registerCodeLensProvider(PYTHON, {
 		provideCodeLenses: (document, token) => {
 			const codelenses: CodeLens[] = [];
+
 			for (let index = 0; index < document.lineCount; index += 1) {
 				if (token.isCancellationRequested) {
 					return codelenses;
 				}
 				const { lineNumber, text } = document.lineAt(index);
+
 				const trigger = containsNotebookExtension([text])
 					? TensorBoardEntrypointTrigger.nbextension
 					: containsTensorBoardImport([text])
 						? TensorBoardEntrypointTrigger.fileimport
 						: undefined;
+
 				if (trigger) {
 					const command: Command = {
 						title: Localized.launchNativeTensorBoardSessionCodeLens,
@@ -55,11 +59,13 @@ export function registerCodeLensProvider() {
 							},
 						],
 					};
+
 					const range = new Range(
 						new Position(lineNumber, 0),
 						new Position(lineNumber, 1),
 					);
 					codelenses.push(new CodeLens(range, command));
+
 					if (trigger === TensorBoardEntrypointTrigger.nbextension) {
 						sendNotebookTelemetry();
 					} else {

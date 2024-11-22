@@ -18,12 +18,15 @@ export async function getLogDirectory() {
 		workspace.workspaceFolders?.length === 1
 	) {
 		const resourceUri = workspace.workspaceFolders?.[0]?.uri;
+
 		const value = getLogDirectoryForResource(resourceUri);
+
 		if (value) {
 			const systemVariables = new SystemVariables(
 				resourceUri,
 				resourceUri?.fsPath,
 			);
+
 			return systemVariables.resolve(value);
 		}
 	}
@@ -31,19 +34,25 @@ export async function getLogDirectory() {
 	// Else we have no idea, do not return anything
 	// No log directory in settings. Ask the user which directory to use
 	const logDir = getSuggestedLogDir();
+
 	const { enterRemoteUrl } = TensorBoard;
+
 	const items: QuickPickItem[] = getQuickPickItems(logDir);
+
 	const item = await window.showQuickPick(items, {
 		canPickMany: false,
 		ignoreFocusOut: false,
 		placeHolder: logDir ? l10n.t("Current: {0}", logDir) : undefined,
 	});
+
 	switch (item?.label) {
 		case TensorBoard.useCurrentWorkingDirectory:
 			return logDir;
+
 		case TensorBoard.selectAFolder:
 		case TensorBoard.selectAnotherFolder:
 			return showFilePicker();
+
 		case enterRemoteUrl:
 			return window.showInputBox({
 				prompt: TensorBoard.enterRemoteUrlDetail,
@@ -73,6 +82,7 @@ function getQuickPickItems(logDir: string | undefined) {
 			label: TensorBoard.useCurrentWorkingDirectory,
 			detail: TensorBoard.useCurrentWorkingDirectoryDetail,
 		};
+
 		const selectAnotherFolder = {
 			label: TensorBoard.selectAnotherFolder,
 			detail: TensorBoard.selectAnotherFolderDetail,
@@ -102,23 +112,29 @@ function getLogDirectoryForResource(resource?: Uri) {
 }
 function getLogDirectoryForResourceFromPythonExt(resource?: Uri) {
 	const config = workspace.getConfiguration("python", resource);
+
 	const settingValue = config.get<{ logDirectory?: string }>(
 		"tensorBoard",
 	)?.logDirectory;
+
 	if (settingValue) {
 		traceDebug(
 			`Using log directory resolved by python.tensorBoard.logDirectory setting: ${settingValue}`,
 		);
+
 		return settingValue;
 	}
 }
 function getLogDirectoryForResourceFromTensorboardExt(resource?: Uri) {
 	const config = workspace.getConfiguration("tensorBoard", resource);
+
 	const settingValue = config.get<string>("logDirectory");
+
 	if (settingValue) {
 		traceDebug(
 			`Using log directory resolved by tensorBoard.logDirectory setting: ${settingValue}`,
 		);
+
 		return settingValue;
 	}
 }
