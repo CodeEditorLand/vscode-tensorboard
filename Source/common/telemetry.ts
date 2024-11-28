@@ -43,6 +43,7 @@ type IGDPRPropertyWithoutMetadata = Omit<
 	IGDPRProperty,
 	"owner" | "comment" | "expiration"
 >;
+
 export type OmitMetadata<T> = Omit<T, "owner" | "comment" | "expiration">;
 
 export type ClassifiedEvent<T extends IGDPRPropertyWithoutMetadata> = {
@@ -139,6 +140,7 @@ type TensorboardSelectionDataClassification = {
 		comment: "Selection from the prompt";
 	};
 };
+
 export function sendTensorboardPromptSelection(
 	selection: TensorBoardPromptSelection,
 ) {
@@ -167,6 +169,7 @@ type TensorboardLaunchDataClassification = {
 		comment: "Code lens displayed";
 	};
 };
+
 export function sendTensorboardLaunch(
 	entrypoint: TensorBoardEntrypoint,
 	trigger: TensorBoardEntrypointTrigger,
@@ -185,6 +188,7 @@ type JumptToSourceDataClassification = {
 	owner: "donjayamanne";
 	comment: "Tensorboard jump to source";
 };
+
 export function sendJumptToSource() {
 	publicLog2<JumptToSourceData, JumptToSourceDataClassification>(
 		EventName.TENSORBOARD_JUMP_TO_SOURCE_REQUEST,
@@ -195,6 +199,7 @@ type JumptToSourceSourceNotFoundDataClassification = {
 	owner: "donjayamanne";
 	comment: "Tensorboard jump to source";
 };
+
 export function sendJumptToSourceNotFound() {
 	publicLog2<
 		JumptToSourceSourceNotFoundData,
@@ -207,6 +212,7 @@ type TensorboardDetectedInTerminalDataClassification = {
 	owner: "donjayamanne";
 	comment: "Tensorboard jump to source";
 };
+
 export function sendTensorboardDetectedInTerminal() {
 	publicLog2<
 		TensorboardDetectedInTerminalFoundData,
@@ -233,6 +239,7 @@ type TensorboardStartupDataClassification = {
 		comment: "Result of starting tensorboard";
 	};
 };
+
 export function sendTensorboardStartupResult(
 	duration: number,
 	result: TensorBoardSessionStartResult,

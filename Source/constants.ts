@@ -41,7 +41,9 @@ export enum EventName {
 export const PYTHON_LANGUAGE = "python";
 
 export const NotebookCellScheme = "vscode-notebook-cell";
+
 export const InteractiveInputScheme = "vscode-interactive-input";
+
 export const PythonExtensionId = "ms-python.python";
 
 export enum TensorBoardEntrypoint {
