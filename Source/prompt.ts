@@ -34,7 +34,9 @@ export namespace TensorBoardPrompt {
 		if (telementrSentForTrigger.includes(trigger)) {
 			return;
 		}
+
 		telementrSentForTrigger.push(trigger);
+
 		sendTensorboardEntrypointTriggered(
 			trigger,
 			TensorBoardEntrypoint.prompt,
@@ -47,9 +49,11 @@ export namespace TensorBoardPrompt {
 		if (!enabledInCurrentSession || waitingForUserSelection) {
 			return;
 		}
+
 		if (!(await isPromptEnabled())) {
 			return;
 		}
+
 		const yes = Common.Yes;
 
 		const no = Common.bannerLabelNo;
@@ -57,14 +61,18 @@ export namespace TensorBoardPrompt {
 		const doNotAskAgain = Common.doNotShowAgain;
 
 		const options = [yes, no, doNotAskAgain];
+
 		waitingForUserSelection = true;
+
 		enabledInCurrentSession = false;
+
 		sendTelemetryOnce(trigger);
 
 		const selection = await window.showInformationMessage(
 			TensorBoard.nativeTensorBoardPrompt,
 			...options,
 		);
+
 		waitingForUserSelection = false;
 
 		let telemetrySelection = TensorBoardPromptSelection.None;
@@ -72,6 +80,7 @@ export namespace TensorBoardPrompt {
 		switch (selection) {
 			case yes:
 				telemetrySelection = TensorBoardPromptSelection.Yes;
+
 				await commands.executeCommand(
 					Commands.LaunchTensorBoard,
 					TensorBoardEntrypoint.prompt,
@@ -82,6 +91,7 @@ export namespace TensorBoardPrompt {
 
 			case doNotAskAgain:
 				telemetrySelection = TensorBoardPromptSelection.DoNotAskAgain;
+
 				await disablePrompt();
 
 				break;
@@ -94,6 +104,7 @@ export namespace TensorBoardPrompt {
 			default:
 				break;
 		}
+
 		sendTensorboardPromptSelection(telemetrySelection);
 	}
 
@@ -107,6 +118,7 @@ export namespace TensorBoardPrompt {
 
 			return false;
 		}
+
 		const pythonApi = await PrivatePythonApiProvider.instance.getApi();
 
 		return (

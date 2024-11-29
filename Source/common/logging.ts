@@ -38,18 +38,21 @@ export function traceError(..._args: unknown[]): void {
 	if (loggingLevel === "off") {
 		return;
 	}
+
 	logMessage("error", ..._args);
 }
 export function logProcessSpawn(cmd: string, args: string[], cwd: string) {
 	if (loggingLevel === "off") {
 		return;
 	}
+
 	logMessage("debug", `Spawning process: ${cmd} ${args.join(" ")} in ${cwd}`);
 }
 export function traceDebug(_message: string, ..._args: unknown[]): void {
 	if (loggingLevel !== "debug") {
 		return;
 	}
+
 	logMessage("debug", ..._args);
 }
 
@@ -78,6 +81,7 @@ function formatErrors(...args: unknown[]) {
 		if (!(arg instanceof Error)) {
 			return arg;
 		}
+
 		const info: string[] = [`${arg.name}: ${arg.message}`.trim()];
 
 		if (arg.stack) {
@@ -96,7 +100,9 @@ function formatErrors(...args: unknown[]) {
 				info.push(stack[0]);
 			}
 		}
+
 		const propertiesToIgnore = ["stack", "message", "name"];
+
 		Object.keys(arg)
 			.filter((key) => propertiesToIgnore.indexOf(key) === -1)
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any

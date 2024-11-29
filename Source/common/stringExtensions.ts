@@ -10,6 +10,7 @@ export function toCommandArgument(value: string): string {
 	if (!value) {
 		return value;
 	}
+
 	return (value.indexOf(" ") >= 0 ||
 		value.indexOf("&") >= 0 ||
 		value.indexOf("(") >= 0 ||
@@ -28,6 +29,7 @@ export function fileToCommandArgument(value: string): string {
 	if (!value) {
 		return value;
 	}
+
 	return toCommandArgument(value).replace(/\\/g, "/");
 }
 
@@ -39,5 +41,6 @@ export function trimQuotes(this: string): string {
 	if (!this) {
 		return this;
 	}
+
 	return this.replace(/(^['"])|(['"]$)/g, "");
 }

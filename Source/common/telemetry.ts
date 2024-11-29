@@ -25,17 +25,25 @@ export interface IPropertyData {
 		| "CustomerContent"
 		| "PublicNonPersonalData"
 		| "EndUserPseudonymizedInformation";
+
 	purpose: "PerformanceAndHealth" | "FeatureInsight" | "BusinessInsight";
+
 	comment: string;
+
 	expiration?: string;
+
 	endpoint?: string;
+
 	isMeasurement?: boolean;
 }
 
 export interface IGDPRProperty {
 	owner: string;
+
 	comment: string;
+
 	expiration?: string;
+
 	readonly [name: string]: IPropertyData | undefined | IGDPRProperty | string;
 }
 
@@ -87,24 +95,33 @@ export function publicLog2<
 	telemetryReporter = telemetryReporter
 		? telemetryReporter
 		: disposableStore.add(new TelemetryReporter(AppInsightsKey));
+
 	telemetryReporter.sendTelemetryEvent(eventName, data);
 }
 
 interface TensorboardEntrypontTriggeredData {
 	trigger: TensorBoardEntrypointTrigger;
+
 	entrypoint: TensorBoardEntrypoint;
 }
 type TensorboardEntrypontTriggeredDataClassification = {
 	owner: "donjayamanne";
+
 	comment: "Codelens displayed";
+
 	trigger: {
 		classification: "SystemMetaData";
+
 		purpose: "FeatureInsight";
+
 		comment: "Location where codelens was displayed";
 	};
+
 	entrypoint: {
 		classification: "SystemMetaData";
+
 		purpose: "FeatureInsight";
+
 		comment: "Code lens displayed";
 	};
 };
@@ -133,10 +150,14 @@ interface TensorboardSelectionData {
 }
 type TensorboardSelectionDataClassification = {
 	owner: "donjayamanne";
+
 	comment: "Tensorboard prompt";
+
 	selection: {
 		classification: "SystemMetaData";
+
 		purpose: "FeatureInsight";
+
 		comment: "Selection from the prompt";
 	};
 };
@@ -153,19 +174,27 @@ export function sendTensorboardPromptSelection(
 }
 interface TensorboardLaunchData {
 	entrypoint: TensorBoardEntrypoint;
+
 	trigger: TensorBoardEntrypointTrigger;
 }
 type TensorboardLaunchDataClassification = {
 	owner: "donjayamanne";
+
 	comment: "Tensorboard prompt";
+
 	trigger: {
 		classification: "SystemMetaData";
+
 		purpose: "FeatureInsight";
+
 		comment: "Location where codelens was displayed";
 	};
+
 	entrypoint: {
 		classification: "SystemMetaData";
+
 		purpose: "FeatureInsight";
+
 		comment: "Code lens displayed";
 	};
 };
@@ -186,6 +215,7 @@ export function sendTensorboardLaunch(
 interface JumptToSourceData {}
 type JumptToSourceDataClassification = {
 	owner: "donjayamanne";
+
 	comment: "Tensorboard jump to source";
 };
 
@@ -197,6 +227,7 @@ export function sendJumptToSource() {
 interface JumptToSourceSourceNotFoundData {}
 type JumptToSourceSourceNotFoundDataClassification = {
 	owner: "donjayamanne";
+
 	comment: "Tensorboard jump to source";
 };
 
@@ -210,6 +241,7 @@ export function sendJumptToSourceNotFound() {
 interface TensorboardDetectedInTerminalFoundData {}
 type TensorboardDetectedInTerminalDataClassification = {
 	owner: "donjayamanne";
+
 	comment: "Tensorboard jump to source";
 };
 
@@ -222,20 +254,29 @@ export function sendTensorboardDetectedInTerminal() {
 
 interface TensorboardStartupData {
 	result: TensorBoardSessionStartResult;
+
 	duration: number;
 }
 type TensorboardStartupDataClassification = {
 	owner: "donjayamanne";
+
 	comment: "Codelens displayed";
+
 	duration: {
 		classification: "SystemMetaData";
+
 		purpose: "FeatureInsight";
+
 		comment: "Duration to start tensorboard";
+
 		isMeasurement: true;
 	};
+
 	result: {
 		classification: "SystemMetaData";
+
 		purpose: "FeatureInsight";
+
 		comment: "Result of starting tensorboard";
 	};
 };
@@ -256,6 +297,7 @@ export function sendTensorboardStartupResult(
 interface TensorboardUsage {}
 type TensorboardUsageClassification = {
 	owner: "donjayamanne";
+
 	comment: "Sent extension activates";
 };
 

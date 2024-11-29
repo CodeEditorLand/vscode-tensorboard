@@ -35,6 +35,7 @@ export function containsTensorBoardImport(
 		// Don't care about failures.
 		noop();
 	}
+
 	return false;
 }
 
@@ -49,6 +50,7 @@ export function containsNotebookExtension(
 			return true;
 		}
 	}
+
 	return false;
 }
 
@@ -59,5 +61,6 @@ export function hasFileBasedWorkspace() {
 	) {
 		return true;
 	}
+
 	return false;
 }

@@ -17,12 +17,17 @@ export interface IStringDictionary<V> {
 
 export interface ISystemVariables {
 	resolve(value: string): string;
+
 	resolve(value: string[]): string[];
+
 	resolve(value: IStringDictionary<string>): IStringDictionary<string>;
+
 	resolve(value: IStringDictionary<string[]>): IStringDictionary<string[]>;
+
 	resolve(
 		value: IStringDictionary<IStringDictionary<string>>,
 	): IStringDictionary<IStringDictionary<string>>;
+
 	resolveAny<T>(value: T): T;
 
 	[key: string]: any;
@@ -30,11 +35,15 @@ export interface ISystemVariables {
 
 abstract class AbstractSystemVariables implements ISystemVariables {
 	public resolve(value: string): string;
+
 	public resolve(value: string[]): string[];
+
 	public resolve(value: IStringDictionary<string>): IStringDictionary<string>;
+
 	public resolve(
 		value: IStringDictionary<string[]>,
 	): IStringDictionary<string[]>;
+
 	public resolve(
 		value: IStringDictionary<IStringDictionary<string>>,
 	): IStringDictionary<IStringDictionary<string>>;
@@ -90,6 +99,7 @@ abstract class AbstractSystemVariables implements ISystemVariables {
 		const result: IStringDictionary<
 			string | IStringDictionary<string> | string[]
 		> = Object.create(null);
+
 		Object.keys(values).forEach((key) => {
 			const value = values[key];
 
@@ -105,6 +115,7 @@ abstract class AbstractSystemVariables implements ISystemVariables {
 		const result: IStringDictionary<
 			string | IStringDictionary<string> | string[]
 		> = Object.create(null);
+
 		Object.keys(values).forEach((key) => {
 			const value = values[key];
 
@@ -127,10 +138,15 @@ abstract class AbstractSystemVariables implements ISystemVariables {
 
 export class SystemVariables extends AbstractSystemVariables {
 	private _workspaceFolder: string;
+
 	private _workspaceFolderName: string;
+
 	private _filePath: string | undefined;
+
 	private _lineNumber: number | undefined;
+
 	private _selectedText: string | undefined;
+
 	private _execPath: string;
 
 	constructor(file: Uri | undefined, rootFolder: string | undefined) {
@@ -139,15 +155,19 @@ export class SystemVariables extends AbstractSystemVariables {
 		const workspaceFolder = file
 			? workspace.getWorkspaceFolder(file)
 			: undefined;
+
 		this._workspaceFolder = workspaceFolder
 			? workspaceFolder.uri.fsPath
 			: rootFolder || __dirname;
+
 		this._workspaceFolderName = Path.basename(this._workspaceFolder);
+
 		this._filePath = file ? file.fsPath : undefined;
 
 		if (window.activeTextEditor) {
 			this._lineNumber =
 				window.activeTextEditor.selection.anchor.line + 1;
+
 			this._selectedText = window.activeTextEditor.document.getText(
 				new Range(
 					window.activeTextEditor.selection.start,
@@ -155,7 +175,9 @@ export class SystemVariables extends AbstractSystemVariables {
 				),
 			);
 		}
+
 		this._execPath = process.execPath;
+
 		Object.keys(process.env).forEach((key) => {
 			(this as any as Record<string, string | undefined>)[`env:${key}`] =
 				(this as any as Record<string, string | undefined>)[

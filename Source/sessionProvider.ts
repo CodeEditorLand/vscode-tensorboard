@@ -21,11 +21,14 @@ export class TensorBoardSessionProvider extends BaseDisposable {
 	};
 
 	private knownSessions: TensorBoardSession[] = [];
+
 	private commandsRegistered = false;
 
 	constructor() {
 		super();
+
 		this.registerCommands();
+
 		this._register(
 			workspace.onDidGrantWorkspaceTrust(this.registerCommands, this),
 		);
@@ -35,10 +38,13 @@ export class TensorBoardSessionProvider extends BaseDisposable {
 		if (this.commandsRegistered) {
 			return;
 		}
+
 		if (!hasFileBasedWorkspace()) {
 			return;
 		}
+
 		this.commandsRegistered = true;
+
 		this._register(
 			commands.registerCommand(
 				Commands.LaunchTensorBoard,
@@ -52,19 +58,23 @@ export class TensorBoardSessionProvider extends BaseDisposable {
 				},
 			),
 		);
+
 		this._register(
 			commands.registerCommand(Commands.RefreshTensorBoard, () =>
 				this.knownSessions.map((w) => w.refresh()),
 			),
 		);
 	}
+
 	private updateTensorBoardSessionContext() {
 		let hasActiveTensorBoardSession = false;
+
 		this.knownSessions.forEach((viewer) => {
 			if (viewer.active) {
 				hasActiveTensorBoardSession = true;
 			}
 		});
+
 		void commands.executeCommand(
 			"setContext",
 			"tensorboard.hasActiveTensorBoardSession",
@@ -74,6 +84,7 @@ export class TensorBoardSessionProvider extends BaseDisposable {
 
 	private async didDisposeSession(session: TensorBoardSession) {
 		this.knownSessions = this.knownSessions.filter((s) => s !== session);
+
 		this.updateTensorBoardSessionContext();
 	}
 
@@ -82,17 +93,22 @@ export class TensorBoardSessionProvider extends BaseDisposable {
 
 		try {
 			const newSession = new TensorBoardSession();
+
 			this._register(
 				newSession.onDidChangeViewState(
 					this.updateTensorBoardSessionContext,
 					this,
 				),
 			);
+
 			this._register(
 				newSession.onDidDispose(this.didDisposeSession, this),
 			);
+
 			this._register(newSession);
+
 			this.knownSessions.push(newSession);
+
 			await newSession.start();
 
 			return newSession;
@@ -101,6 +117,7 @@ export class TensorBoardSessionProvider extends BaseDisposable {
 				`Encountered error while starting new TensorBoard session:`,
 				e,
 			);
+
 			await window.showErrorMessage(
 				l10n.t(
 					"Failed to start a TensorBoard session due to the following error: {0}",

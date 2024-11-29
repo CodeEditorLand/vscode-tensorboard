@@ -17,15 +17,23 @@ import {
 
 export async function activate(context: ExtensionContext) {
 	ExtensionInfo.context = context;
+
 	trackInstallOfExtension();
+
 	context.subscriptions.push(disposableStore);
+
 	context.subscriptions.push(new TensorBoardSessionProvider());
+
 	context.subscriptions.push(registerCodeLensProvider());
+
 	context.subscriptions.push(watchEditorsForTensorboardUsage());
+
 	context.subscriptions.push(watchTerminalForTensorboardUsage());
+
 	context.subscriptions.push(watchFileSystemForTensorboardUsage());
 
 	const apiProvider = PrivatePythonApiProvider.instance;
+
 	void apiProvider.getApi();
 
 	return {

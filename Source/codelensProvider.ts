@@ -40,6 +40,7 @@ export function registerCodeLensProvider() {
 				if (token.isCancellationRequested) {
 					return codelenses;
 				}
+
 				const { lineNumber, text } = document.lineAt(index);
 
 				const trigger = containsNotebookExtension([text])
@@ -64,6 +65,7 @@ export function registerCodeLensProvider() {
 						new Position(lineNumber, 0),
 						new Position(lineNumber, 1),
 					);
+
 					codelenses.push(new CodeLens(range, command));
 
 					if (trigger === TensorBoardEntrypointTrigger.nbextension) {
@@ -73,6 +75,7 @@ export function registerCodeLensProvider() {
 					}
 				}
 			}
+
 			return codelenses;
 		},
 	});

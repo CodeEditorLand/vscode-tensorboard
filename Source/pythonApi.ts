@@ -29,10 +29,13 @@ export interface PrivatePythonApi {
 
 export class PrivatePythonApiProvider extends BaseDisposable {
 	private readonly api = createDeferred<PrivatePythonApi>();
+
 	private readonly didActivatePython = this._register(
 		new EventEmitter<void>(),
 	);
+
 	private readonly _pythonExtensionHooked = createDeferred<void>();
+
 	public get onDidActivatePythonExtension() {
 		return this.didActivatePython.event;
 	}
@@ -43,11 +46,15 @@ export class PrivatePythonApiProvider extends BaseDisposable {
 	}
 
 	private initialized?: boolean;
+
 	private hooksRegistered?: boolean;
+
 	private readonly extensionChecker = this._register(
 		new PythonExtensionChecker(),
 	);
+
 	private static _instance: PrivatePythonApiProvider;
+
 	public static get instance() {
 		return (
 			PrivatePythonApiProvider._instance ||
@@ -55,6 +62,7 @@ export class PrivatePythonApiProvider extends BaseDisposable {
 				new PrivatePythonApiProvider())
 		);
 	}
+
 	private constructor() {
 		super();
 
@@ -84,6 +92,7 @@ export class PrivatePythonApiProvider extends BaseDisposable {
 		if (this.api.resolved || !workspace.isTrusted) {
 			return;
 		}
+
 		this.api.resolve(api);
 	}
 
@@ -91,6 +100,7 @@ export class PrivatePythonApiProvider extends BaseDisposable {
 		if (this.initialized) {
 			return;
 		}
+
 		const pythonExtension = extensions.getExtension<{
 			tensorboard: { registerHooks(): void };
 		}>(PythonExtensionId);
@@ -100,12 +110,15 @@ export class PrivatePythonApiProvider extends BaseDisposable {
 		} else {
 			await this.registerHooks();
 		}
+
 		this.initialized = true;
 	}
+
 	private async registerHooks() {
 		if (this.hooksRegistered) {
 			return;
 		}
+
 		const pythonExtension = extensions.getExtension<{
 			tensorboard: { registerHooks(): void };
 		}>(PythonExtensionId);
@@ -113,14 +126,17 @@ export class PrivatePythonApiProvider extends BaseDisposable {
 		if (!pythonExtension) {
 			return;
 		}
+
 		let activated = false;
 
 		if (!pythonExtension.isActive) {
 			try {
 				await pythonExtension.activate();
+
 				activated = true;
 			} catch (ex) {
 				traceError(`Failed activating the python extension: `, ex);
+
 				this.api.reject(
 					new Error("Python Extnsion failed to actiavte"),
 				);
@@ -128,22 +144,27 @@ export class PrivatePythonApiProvider extends BaseDisposable {
 				return;
 			}
 		}
+
 		if (this.hooksRegistered) {
 			return;
 		}
+
 		this.hooksRegistered = true;
 
 		if (activated) {
 			this.didActivatePython.fire();
 		}
+
 		if (!pythonExtension.exports?.tensorboard) {
 			traceError(`Python extension is not exporting the jupyter API`);
+
 			this.api.reject(
 				new Error("Python Extnsion does not expose the required API"),
 			);
 		} else {
 			pythonExtension.exports.tensorboard.registerHooks();
 		}
+
 		this._pythonExtensionHooked.resolve();
 	}
 }

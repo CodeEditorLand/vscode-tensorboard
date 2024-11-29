@@ -66,6 +66,7 @@ export class TensorBoardSession
 	implements PortAttributesProvider
 {
 	private readonly usedPorts = new Set<number>();
+
 	public get panel(): WebviewPanel | undefined {
 		return this.webviewPanel;
 	}
@@ -89,11 +90,14 @@ export class TensorBoardSession
 	private onDidDisposeEventEmitter = this._register(
 		new EventEmitter<TensorBoardSession>(),
 	);
+
 	private readonly globalMemento: Memento;
 
 	constructor() {
 		super();
+
 		this.globalMemento = ExtensionInfo.context.globalState;
+
 		this._register(
 			workspace.registerPortAttributesProvider(
 				{ commandPattern: new RegExp("tensorboard_launcher", "") },
@@ -105,7 +109,9 @@ export class TensorBoardSession
 	providePortAttributes(
 		attributes: {
 			port: number;
+
 			pid?: number | undefined;
+
 			commandLine?: string | undefined;
 		},
 		_token: CancellationToken,
@@ -131,7 +137,9 @@ export class TensorBoardSession
 		if (!this.webviewPanel) {
 			return;
 		}
+
 		this.webviewPanel.webview.html = "";
+
 		this.webviewPanel.webview.html = await this.getHtml(this.url);
 	}
 
@@ -144,15 +152,18 @@ export class TensorBoardSession
 		if (!tensorBoardWasInstalled) {
 			return;
 		}
+
 		const logDir = await getLogDirectory();
 
 		if (!logDir) {
 			return;
 		}
+
 		const url = await this.startTensorboardSession(logDir);
 
 		if (url) {
 			this.url = url;
+
 			await this.showPanel(url);
 		}
 	}
@@ -188,7 +199,9 @@ export class TensorBoardSession
 		const proc = await launchTensorboard(undefined, interpreter, logDir);
 
 		let disposed = false;
+
 		this._register({ dispose: () => (disposed = true) });
+
 		this._register(new Disposable(() => proc.kill()));
 
 		const result = await window.withProgress(
@@ -199,10 +212,12 @@ export class TensorBoardSession
 				);
 
 				const spawnTensorBoard = waitForTensorboardToStart(proc, token);
+
 				void spawnTensorBoard.then((url) => {
 					if (disposed) {
 						return;
 					}
+
 					const port = parseInt(new URL(url).port, 10);
 
 					if (port) {
@@ -219,16 +234,20 @@ export class TensorBoardSession
 
 		if (result === "canceled") {
 			traceDebug("Canceled starting TensorBoard session.");
+
 			sendTensorboardStartupResult(
 				sessionStartStopwatch.elapsed,
 				TensorBoardSessionStartResult.cancel,
 			);
+
 			proc.kill();
 
 			return;
 		}
+
 		if (result === "success") {
 			this.process = proc;
+
 			sendTensorboardStartupResult(
 				sessionStartStopwatch.elapsed,
 				TensorBoardSessionStartResult.success,
@@ -236,8 +255,10 @@ export class TensorBoardSession
 
 			return;
 		}
+
 		if (typeof result === "number") {
 			proc.kill();
+
 			sendTensorboardStartupResult(
 				sessionStartStopwatch.elapsed,
 				TensorBoardSessionStartResult.error,
@@ -247,6 +268,7 @@ export class TensorBoardSession
 				`Timed out after ${timeout / 1000} seconds waiting for TensorBoard to launch.`,
 			);
 		}
+
 		traceDebug(`Started TensorBoard session with result ${result}`);
 
 		return result;
@@ -256,8 +278,11 @@ export class TensorBoardSession
 		traceDebug("Showing TensorBoard panel");
 
 		const panel = this.webviewPanel || (await this.createPanel(url));
+
 		panel.reveal();
+
 		this._active = true;
+
 		this.onDidChangeViewStateEventEmitter.fire();
 	}
 
@@ -271,19 +296,27 @@ export class TensorBoardSession
 				retainContextWhenHidden: true,
 			},
 		);
+
 		this._register(webviewPanel);
+
 		webviewPanel.webview.html = await this.getHtml(url);
+
 		this.webviewPanel = webviewPanel;
+
 		this._register(
 			webviewPanel.onDidDispose(() => {
 				this.webviewPanel = undefined;
 				// Kill the running TensorBoard session
 				this.process?.kill();
+
 				this.process = undefined;
+
 				this._active = false;
+
 				this.onDidDisposeEventEmitter.fire(this);
 			}),
 		);
+
 		this._register(
 			webviewPanel.onDidChangeViewState(
 				async (args: WebviewPanelOnDidChangeViewStateEvent) => {
@@ -294,11 +327,14 @@ export class TensorBoardSession
 							webviewPanel.viewColumn ?? ViewColumn.Active,
 						);
 					}
+
 					this._active = args.webviewPanel.active;
+
 					this.onDidChangeViewStateEventEmitter.fire();
 				},
 			),
 		);
+
 		this._register(
 			webviewPanel.webview.onDidReceiveMessage((message) => {
 				// Handle messages posted from the webview
@@ -329,6 +365,7 @@ export class TensorBoardSession
 			uri = Uri.file(fsPath);
 		} else {
 			sendJumptToSourceNotFound();
+
 			traceError(
 				`Requested jump to source filepath ${fsPath} does not exist. Prompting user to select source file...`,
 			);
@@ -356,15 +393,19 @@ export class TensorBoardSession
 					if (filePickerSelection !== undefined) {
 						[uri] = filePickerSelection;
 					}
+
 					break;
 				}
+
 				default:
 					break;
 			}
 		}
+
 		if (uri === undefined) {
 			return;
 		}
+
 		const document = await workspace.openTextDocument(uri);
 
 		const editor = await window.showTextDocument(
@@ -379,7 +420,9 @@ export class TensorBoardSession
 				position,
 				editor.document.lineAt(line).range.end,
 			);
+
 			editor.selection = selection;
+
 			editor.revealRange(
 				selection,
 				TextEditorRevealType.InCenterIfOutsideViewport,
@@ -413,18 +456,24 @@ export class TensorBoardSession
 
                             if (f) {
                                 f.style.height = window.innerHeight / 0.8 + "px";
+
                                 f.style.width = window.innerWidth / 0.8 + "px";
                             }
                         }
+
                         window.onload = function() {
                             resizeFrame();
                         }
+
                         window.addEventListener('resize', resizeFrame);
+
                         window.addEventListener('message', (event) => {
                             if (!"${fullWebServerUri}".startsWith(event.origin) || !event.data || !event.data.filename || !event.data.line) {
                                 return;
                             }
+
                             const args = { filename: event.data.filename, line: event.data.line };
+
                             vscode.postMessage({ command: '${Messages.JumpToSource}', args: args });
                         });
                     }())
@@ -441,13 +490,21 @@ export class TensorBoardSession
                 <style>
                     .responsive-iframe {
                         transform: scale(0.8);
+
                         transform-origin: 0 0;
+
                         position: absolute;
+
                         top: 0;
+
                         left: 0;
+
                         overflow: hidden;
+
                         display: block;
+
                         width: 100%;
+
                         height: 100%;
                     }
                 </style>

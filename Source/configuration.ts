@@ -71,6 +71,7 @@ async function showFilePicker(): Promise<string | undefined> {
 	if (selection) {
 		return selection[0].fsPath;
 	}
+
 	return undefined;
 }
 
@@ -87,12 +88,14 @@ function getQuickPickItems(logDir: string | undefined) {
 			label: TensorBoard.selectAnotherFolder,
 			detail: TensorBoard.selectAnotherFolderDetail,
 		};
+
 		items.push(useCwd, selectAnotherFolder);
 	} else {
 		const selectAFolder = {
 			label: TensorBoard.selectAFolder,
 			detail: TensorBoard.selectAFolderDetail,
 		};
+
 		items.push(selectAFolder);
 	}
 

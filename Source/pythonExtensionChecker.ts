@@ -41,6 +41,7 @@ export class PythonExtensionChecker extends BaseDisposable {
 			await this.installPythonExtension();
 		}
 	}
+
 	private async installPythonExtension() {
 		// Have the user install python
 		commands

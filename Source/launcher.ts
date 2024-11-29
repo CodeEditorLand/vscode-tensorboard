@@ -32,6 +32,7 @@ export async function launchTensorboard(
 		fileToCommandArgument(script.fsPath),
 		fileToCommandArgument("./"),
 	];
+
 	logProcessSpawn(pythonEnv.path, args, "./");
 
 	return spawn(pythonEnv.path, args, { cwd: logDir, env });
@@ -54,16 +55,21 @@ export async function waitForTensorboardToStart(
 
 				return resolve(match[1]);
 			}
+
 			traceDebug(output);
 		};
+
 		proc.stdout?.on("data", stdOutHandler);
 
 		const stdErrHandler = (data: Buffer | string) =>
 			traceError(data.toString("utf8"));
+
 		proc.stderr?.on("data", stdErrHandler);
+
 		disposable.add(
 			new Disposable(() => proc.stdout?.off("data", stdOutHandler)),
 		);
+
 		disposable.add(
 			new Disposable(() => proc.stderr?.off("data", stdErrHandler)),
 		);

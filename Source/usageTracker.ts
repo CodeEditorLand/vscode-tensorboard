@@ -56,11 +56,13 @@ function updateFileSystemWatchers(
 	for (const added of event.added) {
 		createFileSystemWatcher(added, fileSystemWatchers, dispsoableStore);
 	}
+
 	for (const removed of event.removed) {
 		const watchers = fileSystemWatchers.get(removed);
 
 		if (watchers) {
 			Disposable.from(...watchers).dispose();
+
 			fileSystemWatchers.delete(removed);
 		}
 	}
@@ -87,6 +89,7 @@ function createFileSystemWatcher(
 				),
 			),
 		);
+
 		dispsoableStore.add(
 			fileSystemWatcher.onDidChange(() =>
 				TensorBoardPrompt.show(
@@ -94,9 +97,12 @@ function createFileSystemWatcher(
 				),
 			),
 		);
+
 		dispsoableStore.add(fileSystemWatcher);
+
 		fileWatchers.push(fileSystemWatcher);
 	}
+
 	fileSystemWatchers.set(folder, fileWatchers);
 }
 
@@ -113,6 +119,7 @@ function onChangedActiveTextEditor(editor: TextEditor | undefined): void {
 	if (!editor || !editor.document) {
 		return;
 	}
+
 	const { document } = editor;
 
 	const extName = path.extname(document.fileName).toLowerCase();
@@ -123,7 +130,9 @@ function onChangedActiveTextEditor(editor: TextEditor | undefined): void {
 	) {
 		for (
 			let lineNumber = 0;
+
 			lineNumber < document.lineCount;
+
 			lineNumber += 1
 		) {
 			const line = document.lineAt(lineNumber);
@@ -152,6 +161,7 @@ export function watchTerminalForTensorboardUsage(): Disposable {
 
 		if (matches.length > 0) {
 			sendTensorboardDetectedInTerminal();
+
 			clearInterval(handle); // Only need telemetry sent once per VS Code session
 		}
 	}, 300_000);
