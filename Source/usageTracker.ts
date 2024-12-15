@@ -130,9 +130,7 @@ function onChangedActiveTextEditor(editor: TextEditor | undefined): void {
 	) {
 		for (
 			let lineNumber = 0;
-
 			lineNumber < document.lineCount;
-
 			lineNumber += 1
 		) {
 			const line = document.lineAt(lineNumber);
