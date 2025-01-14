@@ -75,10 +75,10 @@
 	"dependencies": {},
 	"devDependencies": {
 		"@types/chai": "5.0.1",
-		"@types/node": "22.10.5",
+		"@types/node": "22.10.6",
 		"chai": "5.1.2",
-		"glob": "11.0.0",
-		"ts-loader": "9.5.1"
+		"glob": "11.0.1",
+		"ts-loader": "9.5.2"
 	},
 	"extensionDependencies": [
 		"ms-python.python"
